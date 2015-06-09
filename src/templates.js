@@ -1,4 +1,4 @@
-angular.module('oneflow.image-upload').run(['$templateCache', function($templateCache) {
+angular.module('of.translations').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('templates/token-form.html',

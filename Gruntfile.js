@@ -2,7 +2,7 @@ var grunt = require('grunt');
 
 grunt.initConfig({
     ngtemplates: {
-        'oneflow.image-upload': {
+        'of.translations': {
             src: 'templates/**/*.html',
             dest: 'src/templates.js'
         }
@@ -10,23 +10,7 @@ grunt.initConfig({
     concat: {
       dist: {
         src: 'src/*.js',
-        dest: 'dist/image-upload.js'
-      }
-    },
-    postcss: {
-      options: {
-        map: true,
-        processors: [
-          require('cssnext'),
-          require('postcss-nested'),
-          require('autoprefixer-core')({
-            browsers: ['last 2 versions']
-          })
-        ]
-      },
-      dist: {
-        src: 'src/*.css',
-        dest: 'dist/image-upload.css'
+        dest: 'dist/index.js'
       }
     }
 });
