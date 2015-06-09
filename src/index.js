@@ -127,7 +127,7 @@ angular.module('of.translations', ["ng"]).factory('TranslationService', function
     return {
         restrict: 'E',
         scope: { },
-        templateUrl: 'ofs/js/components/language/token-form.html',
+        templateUrl: 'templates/token-form.html',
         controller: function ($scope, $http, $attrs, $element, $translate, $modal, TranslationService) {
 
             function toTitleCase(str)  {

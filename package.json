@@ -1,0 +1,30 @@
+{
+    "name": "of.translations",
+    "version": "1.0.0",
+    "description": "",
+    "main": "Gruntfile.js",
+    "dependencies": {
+        "cssnext": "^1.6.0",
+        "grunt": "^0.4.5",
+        "grunt-angular-templates": "^0.5.7",
+        "grunt-cssnext": "^1.0.0",
+        "grunt-postcss": "^0.4.0",
+        "grunt-contrib-concat": "^0.5.1",
+        "postcss-nested": "^0.3.2",
+        "autoprefixer-core": "^5.2.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Oneflow/of.translations.git"
+    },
+    "author": "Nigel Watson <nigel.watson@oneflowcloud.com> (http://www.oneflowsystems.com/)",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Oneflow/of.translations/issues"
+    },
+    "homepage": "https://github.com/Oneflow/of.translations"
+}
