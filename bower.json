@@ -1,0 +1,19 @@
+{
+  "name": "of.translations",
+  "version": "1.0.0",
+  "main": "index.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "homepage": "https://github.com/Oneflow/of.translations",
+  "authors": [
+    "nigel.watson@oneflowsystems.com"
+  ],
+  "description": "OneFlow Translations Module",
+  "license": "OneFlow Master",
+  "private": true
+}
