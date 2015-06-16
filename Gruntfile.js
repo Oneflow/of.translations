@@ -4,12 +4,12 @@ grunt.initConfig({
     ngtemplates: {
         'of.translations': {
             src: 'templates/**/*.html',
-            dest: 'src/templates.js'
+            dest: '.tmp/templates.js'
         }
     },
     concat: {
       dist: {
-        src: 'src/*.js',
+        src: [ 'src/index.js', '.tmp/*.js'],
         dest: 'dist/index.js'
       }
     }
