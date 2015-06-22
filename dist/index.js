@@ -12,6 +12,24 @@ angular.module('of.translations', ["ng"])
             this.config.languageUrlBase = url;
         };
     })
+    .factory('languageLoader', ['$http', '$q', 'TranslationSettings', function($http, $q, TranslationSettings) {
+        return function LoadLanguages(options) {
+            var deferred = $q.defer();
+            var locale = "en";
+            if (options.key) {
+                locale = options.key;
+            }
+            $http
+                .get(TranslationSettings.languageUrlBase + "/all/" + locale)
+                .success(function(results) {
+                    
+                    deferred.resolve(results[locale]);
+                }).error(function() {
+                    deferred.resolve(locale);
+                });
+            return deferred.promise;
+        };
+    }])
     .factory('TranslationService', function($http, $localStorage, TranslationSettings) {
         var currentLocale = "en";
         if (localStorage && localStorage.prefLang) {
