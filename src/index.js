@@ -4,7 +4,8 @@
     angular.module('of.translations', ['ng'])
         .provider('TranslationSettings', function() {
             this.config = {
-                languageUrlBase: ''
+                languageUrlBase: '',
+                namespace: ''
             };
 
             this.$get = function() {
@@ -13,6 +14,10 @@
 
             this.setLanguageUrl = function(url) {
                 this.config.languageUrlBase = url;
+            };
+
+            this.setLanguageNamespace = function (namespace) {
+                this.config.namespace = namespace;
             };
         })
         .factory('languageLoader', ['$http', '$q', 'TranslationSettings', function($http, $q, TranslationSettings) {
@@ -23,10 +28,10 @@
                     locale = options.key;
                 }
                 $http
-                    .get(TranslationSettings.languageUrlBase + '/all/' + locale)
+                    .get(TranslationSettings.languageUrlBase + '/languages/' + locale + '/tokens')
                     .success(function(results) {
 
-                        deferred.resolve(results[locale]);
+                        deferred.resolve(results.translations);
                     }).error(function() {
                         deferred.resolve(locale);
                     });
@@ -53,7 +58,7 @@
                 },
                 getLocales: function(callback) {
                     $http
-                        .get(TranslationSettings.languageUrlBase + '/locales/all')
+                        .get(TranslationSettings.languageUrlBase + '/languages')
                         .success(callback)
                         .error(callback);
                 },
@@ -61,7 +66,7 @@
                     if (!token) {
                         return callback(new Error('No Token Specified'));
                     }
-                    var url = TranslationSettings.languageUrlBase + '/token/' + encodeURIComponent(token);
+                    var url = TranslationSettings.languageUrlBase + '/tokens/name/' + encodeURIComponent(token);
                     $http.get(url)
                         .success(function(result) {
                             callback(null, result);
@@ -75,7 +80,7 @@
                         });
                 },
                 create: function(_translationRecord, callback) {
-                    var postUrl = TranslationSettings.languageUrlBase + '/' + encodeURIComponent(_translationRecord.token);
+                    var postUrl = TranslationSettings.languageUrlBase + '/tokens/' + currentLocale + '/';
                     $http.post(postUrl, _translationRecord)
                         .success(function(results) {
                             callback(null, results);
@@ -83,7 +88,7 @@
                         .error(callback);
                 },
                 update: function(_translationRecord, callback) {
-                    var putUrl = TranslationSettings.languageUrlBase + '/' + _translationRecord._id;
+                    var putUrl = TranslationSettings.languageUrlBase + '/tokens/' + _translationRecord._id;
                     $http.put(putUrl, _translationRecord)
                         .success(function(results) {
                             callback(null, results);
@@ -102,7 +107,7 @@
                 },
                 translateToken: function(token, locale, callback) {
                     console.log(encodeURIComponent(token));
-                    $http.put(TranslationSettings.languageUrlBase + '/google/' + encodeURIComponent(token) + '/' + locale)
+                    $http.put(TranslationSettings.languageUrlBase + '/tokens/google/' + encodeURIComponent(token) + '/' + locale)
                         .success(function(results) {
                             callback(null, results);
                         })
@@ -111,7 +116,7 @@
                         });
                 },
                 getTranslation: function(english, callback) {
-                    $http.get(TranslationSettings.languageUrlBase + '/google/' + encodeURIComponent(english))
+                    $http.get(TranslationSettings.languageUrlBase + '/tokens/google/' + encodeURIComponent(english))
                         .success(function(results) {
                             callback(null, results);
                         })
@@ -131,7 +136,7 @@
             function saveToken() {
                 var locale = TranslationService.getLocale();
                 TranslationService.save($scope.translationRecord, function() {
-                    updateTokenText($scope.translationRecord.translations[locale]);
+                    updateTokenText($scope.translationRecord.translation);
                     $modalInstance.dismiss('cancel');
                 });
             }
@@ -144,7 +149,7 @@
                 }
                 TranslationService.translateToken(token, locale, function(err, _translationRecord) {
                     $scope.translationRecord = _translationRecord;
-                    updateTokenText(_translationRecord.translations[locale]);
+                    updateTokenText(_translationRecord.translation);
                     // selectedElement[0].innerText = _translationRecord.translations[locale];
                 });
             }
@@ -205,9 +210,7 @@
                                 //no record found
                                 $scope.translationRecord = {
                                     token: token,
-                                    translations: {
-                                        en: toTitleCase(token.replace(/_/g, ' '))
-                                    }
+                                    translation: toTitleCase(token.replace(/_/g, ' '))
                                 };
                             } else {
                                 $scope.translationRecord = _translationRecord;
