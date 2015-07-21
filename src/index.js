@@ -15,7 +15,7 @@
                 this.config.languageUrlBase = url;
             };
         })
-        .factory('languageLoader', ['$http', '$q', 'TranslationSettings', function($http, $q, TranslationSettings) {
+        .factory('languageLoader', ['$rootScope', '$http', '$q', 'TranslationSettings', function($rootScope, $http, $q, TranslationSettings) {
             return function LoadLanguages(options) {
                 var deferred = $q.defer();
                 var locale = 'en';
@@ -23,10 +23,10 @@
                     locale = options.key;
                 }
                 $http
-                    .get(TranslationSettings.languageUrlBase + '/all/' + locale)
+                    .get(TranslationSettings.languageUrlBase + '/' + locale + '/tokens')
                     .success(function(results) {
-
-                        deferred.resolve(results[locale]);
+                        $rootScope.$broadcast('translations.rtl', { rtl: results.rtl });
+                        deferred.resolve(results.translations);
                     }).error(function() {
                         deferred.resolve(locale);
                     });
@@ -39,6 +39,7 @@
                 currentLocale = $localStorage.prefLang;
             }
             return {
+                rtl: false,
                 setLocale: function(locale) {
                     currentLocale = locale;
                     if ($localStorage) {
@@ -53,7 +54,7 @@
                 },
                 getLocales: function(callback) {
                     $http
-                        .get(TranslationSettings.languageUrlBase + '/locales/all')
+                        .get(TranslationSettings.languageUrlBase)
                         .success(callback)
                         .error(callback);
                 },
@@ -61,7 +62,7 @@
                     if (!token) {
                         return callback(new Error('No Token Specified'));
                     }
-                    var url = TranslationSettings.languageUrlBase + '/token/' + encodeURIComponent(token);
+                    var url = TranslationSettings.languageUrlBase + '/token/' + encodeURIComponent(token) + '/' + currentLocale;
                     $http.get(url)
                         .success(function(result) {
                             callback(null, result);
@@ -75,7 +76,7 @@
                         });
                 },
                 create: function(_translationRecord, callback) {
-                    var postUrl = TranslationSettings.languageUrlBase + '/' + encodeURIComponent(_translationRecord.token);
+                    var postUrl = TranslationSettings.languageUrlBase + '/token/' + currentLocale;
                     $http.post(postUrl, _translationRecord)
                         .success(function(results) {
                             callback(null, results);
@@ -83,7 +84,7 @@
                         .error(callback);
                 },
                 update: function(_translationRecord, callback) {
-                    var putUrl = TranslationSettings.languageUrlBase + '/' + _translationRecord._id;
+                    var putUrl = TranslationSettings.languageUrlBase + '/tokens/' + _translationRecord._id;
                     $http.put(putUrl, _translationRecord)
                         .success(function(results) {
                             callback(null, results);
@@ -131,7 +132,7 @@
             function saveToken() {
                 var locale = TranslationService.getLocale();
                 TranslationService.save($scope.translationRecord, function() {
-                    updateTokenText($scope.translationRecord.translations[locale]);
+                    updateTokenText($scope.translationRecord.translation);
                     $modalInstance.dismiss('cancel');
                 });
             }
@@ -144,7 +145,7 @@
                 }
                 TranslationService.translateToken(token, locale, function(err, _translationRecord) {
                     $scope.translationRecord = _translationRecord;
-                    updateTokenText(_translationRecord.translations[locale]);
+                    updateTokenText(_translationRecord.translation);
                     // selectedElement[0].innerText = _translationRecord.translations[locale];
                 });
             }
@@ -254,3 +255,4 @@
             };
         });
 })(window, document);
+

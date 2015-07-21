@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label" translate="english"></label>
                 <div class="col-lg-9">
-                    <input type="text" class="form-control" ng-model="translationRecord.translations.en"/>
+                    <input type="text" class="form-control" ng-model="translationRecord.token"/>
                 </div>
             </div>
 
@@ -25,7 +25,7 @@
                 <label class="col-lg-3 control-label">{{getLocale()}}</label>
                 <div class="col-lg-9">
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="translationRecord.translations[getLocale()]"/>
+                        <input type="text" class="form-control" ng-model="translationRecord.translation"/>
                         <span class="input-group-btn">
                             <button class="btn btn-default" translate="Translate" ng-click="googleTranslate()"></button>
                         </span>
@@ -37,7 +37,7 @@
 
     </div>
     <div class="modal-footer">
-        <button class="btn" ng-click="closeModal()" translate="Cancel"></a>
+        <button class="btn btn-default" ng-click="closeModal()" translate="Cancel"></a>
         <button class="btn btn-success" ng-click="saveToken()" translate="Save Token"></a>
     </div>
 </script>
