@@ -289,7 +289,7 @@ angular.module('of.translations').run(['$templateCache', function($templateCache
     "                </div>\n" +
     "            </div>\n" +
     "\n" +
-    "            <div class=\"form-group\" ng-show=\"getLocale()!='en'\">\n" +
+    "            <div class=\"form-group\">\n" +
     "                <label class=\"col-lg-3 control-label\">{{getLocale()}}</label>\n" +
     "                <div class=\"col-lg-9\">\n" +
     "                    <div class=\"input-group\">\n" +
