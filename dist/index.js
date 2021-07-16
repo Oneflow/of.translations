@@ -31,12 +31,13 @@
                 }
                 $http
                     .get(TranslationSettings.namespaceUrlBase + '/' + locale + '/tokens')
-                    .success(function(results) {
+                    .then(function(results) {
                         $rootScope.$broadcast('translations.rtl', { rtl: results.rtl });
                         deferred.resolve(results.translations);
-                    }).error(function() {
+                    }, function () {
                         deferred.resolve(locale);
                     });
+                    
                 return deferred.promise;
             };
         }])
@@ -62,8 +63,11 @@
                 getLocales: function(callback) {
                     $http
                         .get(TranslationSettings.languageUrlBase + '/namespace/' + TranslationSettings.namespace)
-                        .success(callback)
-                        .error(callback);
+                        .then(function(results) {
+                            callback(null, results);
+                        }, function (error) {
+                            callback(error);
+                        });
                 },
                 getToken: function(token, callback) {
                     if (!token) {
@@ -71,10 +75,9 @@
                     }
                     var url = TranslationSettings.namespaceUrlBase + '/token/' + encodeURIComponent(token) + '/' + currentLocale;
                     $http.get(url)
-                        .success(function(result) {
-                            callback(null, result);
-                        })
-                        .error(function(error, statusCode) {
+                        .then(function(results) {
+                            callback(null, results);
+                        }, function (error, statusCode) {
                             if (statusCode === 404) {
                                 callback();
                             } else {
@@ -85,18 +88,20 @@
                 create: function(_translationRecord, callback) {
                     var postUrl = TranslationSettings.namespaceUrlBase + '/token/' + currentLocale;
                     $http.post(postUrl, _translationRecord)
-                        .success(function(results) {
+                        .then(function(results) {
                             callback(null, results);
-                        })
-                        .error(callback);
+                        }, function (error) {
+                            callback(error);
+                        });
                 },
                 update: function(_translationRecord, callback) {
                     var putUrl = TranslationSettings.languageUrlBase + '/tokens/' + _translationRecord._id;
                     $http.put(putUrl, _translationRecord)
-                        .success(function(results) {
+                        .then(function(results) {
                             callback(null, results);
-                        })
-                        .error(callback);
+                        }, function (error) {
+                            callback(error);
+                        });
                 },
                 save: function(_translationRecord, callback) {
                     console.log('_translationRecord', _translationRecord);
@@ -111,19 +116,17 @@
                 translateToken: function(token, locale, callback) {
                     console.log(encodeURIComponent(token));
                     $http.put(TranslationSettings.namespaceUrlBase + '/google/' + encodeURIComponent(token) + '/' + locale)
-                        .success(function(results) {
+                        .then(function(results) {
                             callback(null, results);
-                        })
-                        .error(function(error) {
+                        }, function (error) {
                             callback(error);
                         });
                 },
                 getTranslation: function(english, callback) {
                     $http.get(TranslationSettings.languageUrlBase + '/google/' + encodeURIComponent(english))
-                        .success(function(results) {
+                        .then(function(results) {
                             callback(null, results);
-                        })
-                        .error(function(error) {
+                        }, function (error) {
                             callback(error);
                         });
                 }
